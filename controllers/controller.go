@@ -67,3 +67,32 @@ func EditaAluno(c *gin.Context) {
 	database.DB.Model(&aluno).UpdateColumns(aluno)
 	c.JSON(http.StatusOK, aluno)
 }
+
+func BuscaAlunoPorCPF(c *gin.Context) {
+	var aluno models.Aluno
+	cpf := c.Param("cpf")
+	database.DB.Where(&models.Aluno{CPF: cpf}).First(&aluno)
+
+	if aluno.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"Not Found": "Aluno nao encontrado",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, aluno)
+}
+
+func BuscaAlunoPorRG(c *gin.Context) {
+	var aluno models.Aluno
+	rg := c.Param("rg")
+
+	database.DB.Where(&models.Aluno{RG: rg}).First(&aluno)
+
+	if aluno.ID == 0 {
+		c.JSON(http.StatusNotFound, gin.H{
+			"Not Found": "Aluno nao encontrado",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, aluno)
+}
